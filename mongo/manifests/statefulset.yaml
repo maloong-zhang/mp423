@@ -1,0 +1,46 @@
+---
+# MongoDb Headless Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-headless
+spec:
+  clusterIP: None
+  selector:
+    app: mongo
+  ports:
+    - port: 27017
+
+---
+# MongoDB StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: mongo-headless
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo
+          ports:
+            - containerPort: 27017
+          envFrom:
+            - configMapRef:
+                name: mongo-configmap
+            - secretRef:
+                name: mongo-secret
+          volumeMounts:
+            - mountPath: /usr/lib/mongo
+              name: mongo-volume
+      volumes:
+        - name: mongo-volume
+          persistentVolumeClaim:
+            claimName: mongo-pvc
