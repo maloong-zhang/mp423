@@ -8,6 +8,13 @@
 
 > This project need to create two queue first, one name is "video" and the other is "mp3", you can use the ingress service: ["Rabbit Management"](http://rabbitmq-manager.com)
 
+### Create a Environment
+
+```bash
+python3 -m venv .venv
+source ./venv/bin/activate.fish
+```
+
 ### Generate Requirements
 
 ```bash
